@@ -10,8 +10,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import environ
 
 
-ROOT_DIR = environ.Path(
-    __file__) - 3  # ({{ cookiecutter.project_slug }}/config/settings/base.py - 3 = {{ cookiecutter.project_slug }}/)
+ROOT_DIR = environ.Path(__file__) - 3
 APPS_DIR = ROOT_DIR.path('{{ cookiecutter.project_slug }}')
 
 # Load operating system environment variables and then prepare to use them
@@ -266,26 +265,8 @@ LOGIN_URL = 'account_login'
 
 # SLUGLIFIER
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
-{ % if cookiecutter.use_celery == 'y' %}
-########## CELERY
-INSTALLED_APPS += ['{{cookiecutter.project_slug}}.taskapp.celery.CeleryConfig']
-CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='django://')
-if CELERY_BROKER_URL == 'django://':
-    CELERY_RESULT_BACKEND = 'redis://'
-else:
-    CELERY_RESULT_BACKEND = CELERY_BROKER_URL
-########## END CELERY
-{ % endif %}
 
-{ % - if cookiecutter.use_compressor == 'y' - %}
-# django-compressor
-# ------------------------------------------------------------------------------
-INSTALLED_APPS += ['compressor']
 STATICFILES_FINDERS += ['compressor.finders.CompressorFinder']
-{ % - endif %}
 
 # Location of root django.contrib.admin URL, use {% raw %}{% url 'admin:index' %}{% endraw %}
 ADMIN_URL = r'^admin/'
-
-# Your common stuff: Below this line define 3rd party library settings
-# ------------------------------------------------------------------------------

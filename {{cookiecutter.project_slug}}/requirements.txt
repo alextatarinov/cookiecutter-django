@@ -1,3 +1,57 @@
-# This file is here because many Platforms as a Service look for
-#	requirements.txt in the root directory of a project.
--r requirements/production.txt
+# Bleeding edge Django
+django
+
+django-environ
+
+# Forms
+django-braces
+django-crispy-forms
+
+# Models
+django-model-utils
+
+# Images
+Pillow
+
+# Password storage
+argon2-cffi
+
+# For user registration, either via email or social
+# Well-built with regular release cycles!
+django-allauth
+
+# Python-PostgreSQL Database Adapter
+psycopg2
+
+# Unicode slugification
+awesome-slugify
+
+# Time zones support
+pytz
+
+# Redis support
+django-redis
+redis
+
+{% if cookiecutter.use_celery == "y" %}
+celery
+{% endif %}
+
+django-extensions
+
+django-debug-toolbar
+
+
+# WSGI Handler
+gunicorn
+
+# Static and Media Storage
+{% if cookiecutter.use_s3 == "y" %}
+boto
+django-storages
+{% endif %}
+
+{% if cookiecutter.use_sentry_for_error_reporting == "y" %}
+# Raven is the Sentry client
+raven
+{% endif %}

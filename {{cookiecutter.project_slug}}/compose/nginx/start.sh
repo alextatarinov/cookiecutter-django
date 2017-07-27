@@ -30,13 +30,13 @@ done
 
 while [ ! -f /etc/letsencrypt/live/$MY_DOMAIN_NAME/fullchain.pem ] ;
 do
-	echo Waiting for file fullchain.pem to exist
+    echo Waiting for file fullchain.pem to exist
     sleep 2
 done
 
 while [ ! -f /etc/letsencrypt/live/$MY_DOMAIN_NAME/privkey.pem ] ;
 do
-	echo Waiting for file privkey.pem to exist
+    echo Waiting for file privkey.pem to exist
     sleep 2
 done
 
