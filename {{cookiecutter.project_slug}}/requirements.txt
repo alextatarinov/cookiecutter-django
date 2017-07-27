@@ -23,9 +23,6 @@ django-allauth
 # Python-PostgreSQL Database Adapter
 psycopg2
 
-# Unicode slugification
-awesome-slugify
-
 # Time zones support
 pytz
 
@@ -38,9 +35,7 @@ celery
 {% endif %}
 
 django-extensions
-
 django-debug-toolbar
-
 
 # WSGI Handler
 gunicorn
@@ -49,6 +44,7 @@ gunicorn
 {% if cookiecutter.use_s3 == "y" %}
 boto
 django-storages
+django-s3-collectstatic
 {% endif %}
 
 {% if cookiecutter.use_sentry_for_error_reporting == "y" %}

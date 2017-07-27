@@ -1,59 +1,18 @@
-"""
-Local settings
-
-- Run in Debug mode
-- Use console backend for emails
-- Add Django Debug Toolbar
-- Add django-extensions as app
-"""
-
-from .base import *  # noqa
+from .base import *
 
 
 # DEBUG
-# ------------------------------------------------------------------------------
-DEBUG = env.bool('DJANGO_DEBUG', default=True)
-TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
-
-# SECRET CONFIGURATION
-# ------------------------------------------------------------------------------
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-# Note: This key only used for development and testing.
-SECRET_KEY = env('DJANGO_SECRET_KEY', default='CHANGEME!!!')
+DEBUG = True
 
 # Mail settings
-# ------------------------------------------------------------------------------
-
-EMAIL_PORT = 1025
-EMAIL_HOST = 'localhost'
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-                    default='django.core.mail.backends.console.EmailBackend')
-
-# CACHING
-# ------------------------------------------------------------------------------
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': ''
-    }
-}
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # django-debug-toolbar
-# ------------------------------------------------------------------------------
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
 INSTALLED_APPS += ['debug_toolbar', ]
 
-INTERNAL_IPS = ['127.0.0.1', '10.0.2.2', ]
-{ % if cookiecutter.use_docker == 'y' %}
-{  # [cookiecutter-django] This is a workaround to flake8 "imported but unused" errors #}
-import os
+INTERNAL_IPS = ['127.0.0.1']
 
-
-# tricks to have debug toolbar when developing with docker
-if os.environ.get('USE_DOCKER') == 'yes':
-    ip = socket.gethostbyname(socket.gethostname())
-INTERNAL_IPS += [ip[:-1] + '1']
-{ % endif %}
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': [
         'debug_toolbar.panels.redirects.RedirectsPanel',
@@ -61,18 +20,46 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TEMPLATE_CONTEXT': True,
 }
 
-# django-extensions
-# ------------------------------------------------------------------------------
-INSTALLED_APPS += ['django_extensions', ]
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '{{ cookiecutter.project_slug }}',
+        'USER': '{{ cookiecutter.project_slug }}',
+        'PASSWORD': '{{ cookiecutter.project_slug }}',
+        'HOST': '127.0.0.1',
+        'PORT': '',
+        'CONN_MAX_AGE': 600
+    }
+}
 
-# TESTING
-# ------------------------------------------------------------------------------
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-{ % if cookiecutter.use_celery == 'y' %}
-########## CELERY
-# In development, all tasks will be executed locally by blocking until the task returns
-CELERY_ALWAYS_EAGER = True
-########## END CELERY
-{ % endif %}
-# Your local stuff: Below this line define 3rd party library settings
-# ------------------------------------------------------------------------------
+ALLOWED_HOSTS = ['*']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'naming': {
+            'format': '%(name)s: [%(asctime)s] [%(levelname)s] %(message)s',
+            'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'naming'
+        }
+    },
+    'loggers': {
+        'app': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+{% if cookiecutter.use_celery == 'y' %}
+        'celery_tasks': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+{% endif %}
+    }
+}

@@ -7,5 +7,5 @@
   "use_celery": "n",
   "use_s3": "n",
   "use_sentry_for_error_reporting": "y",
-  "use_lets_encrypt": "n"
+  "use_ssl": "n"
 }
