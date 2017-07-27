@@ -2,13 +2,7 @@
 Local settings
 
 - Run in Debug mode
-{% if cookiecutter.use_mailhog == 'y' and cookiecutter.use_docker == 'y' %}
-- Use mailhog for emails
-{% elif cookiecutter.use_mailhog == 'y' and cookiecutter.use_docker == 'n' %}
-- Use mailhog for emails
-{% else %}
 - Use console backend for emails
-{% endif %}
 - Add Django Debug Toolbar
 - Add django-extensions as app
 """
@@ -31,15 +25,9 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', default='CHANGEME!!!')
 # ------------------------------------------------------------------------------
 
 EMAIL_PORT = 1025
-{ % if cookiecutter.use_mailhog == 'y' and cookiecutter.use_docker == 'y' %}
-EMAIL_HOST = env('EMAIL_HOST', default='mailhog')
-{ % elif cookiecutter.use_mailhog == 'y' and cookiecutter.use_docker == 'n' %}
-EMAIL_HOST = 'localhost'
-{ % else %}
 EMAIL_HOST = 'localhost'
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
                     default='django.core.mail.backends.console.EmailBackend')
-{ % endif %}
 
 # CACHING
 # ------------------------------------------------------------------------------
