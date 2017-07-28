@@ -62,5 +62,9 @@ celerybeat-schedule
 *.iml
 out
 gen
+
+# Project files
 media/
 staticfiles/
+logs/
+!.gitkeep
