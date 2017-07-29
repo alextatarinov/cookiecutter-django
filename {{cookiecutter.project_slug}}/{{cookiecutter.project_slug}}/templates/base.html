@@ -31,9 +31,11 @@
 <div class="container">
 
     {% raw %}{% if messages %}
-    {% for message in messages %}{% endraw %}
-    <div class="alert {% raw %}{% if message.tags %}{% endraw %}alert-{% raw %}{{ message.tags }}{% endraw %}{% endif %}">{{ message }}</div>
-    {% raw %}{% endfor %}
+    {% for message in messages %}
+    <div class="alert {% raw %}{% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
     {% endif %}
 
     {% block content %}

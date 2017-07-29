@@ -2,12 +2,12 @@ from fabric.api import *
 import os
 
 
-env.key_filename = None
+env.key_filename = '~/.ssh/aws-{{ cookiecutter.project_slug }}.pem'
 env.user = 'ubuntu'
-env.hosts = []
+env.hosts = ['{{ cookiecutter.domain_name }}']
 
 project_dir = '/home/{{ cookiecutter.project_slug }}/{{ cookiecutter.project_slug }}'
-app_dir = os.path.join(project_dir, {{ cookiecutter.project_slug }})
+app_dir = os.path.join(project_dir, '{{ cookiecutter.project_slug }}')
 env_dir = os.path.join(project_dir, '.venv')
 
 
@@ -24,4 +24,4 @@ def deploy():
             run('python manage.py collectstatic --no-input')
             {% endif %}
 
-    sudo('supervisorctl reload {}'.format({{ cookiecutter.project_slug }}))
+    sudo('supervisorctl reload {}'.format('{{ cookiecutter.project_slug }}'))

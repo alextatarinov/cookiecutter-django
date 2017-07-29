@@ -6,6 +6,6 @@
   "timezone": "UTC",
   "use_celery": "n",
   "use_s3": "n",
-  "use_sentry_for_error_reporting": "y",
-  "use_ssl": "n"
+  "use_sentry_for_error_reporting": "n",
+  "use_ssl": "y"
 }

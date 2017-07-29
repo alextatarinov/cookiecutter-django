@@ -57,6 +57,9 @@ coverage.xml
 # celery beat schedule file
 celerybeat-schedule
 
+# Gitkeep
+!.gitkeep
+
 # IntelliJ project files
 .idea
 *.iml
@@ -67,4 +70,3 @@ gen
 media/
 staticfiles/
 logs/
-!.gitkeep
