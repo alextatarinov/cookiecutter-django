@@ -5,28 +5,28 @@ upstream app_server {
 
 # if no Host match, close the connection to prevent host spoofing
 server {
-  listen 80 default_server;
+  listen 80 deferred http2 default_server;
   server_name _;
   return 444;
 }
 
 # remove www for http requests
 server {
-  listen 80;
+  listen 80 deferred http2;
   server_name www.example.com;
   return 301 http://example.com$request_uri;
 }
 
 # redirect all requests to SSL and remove www
 #server {
-#  listen 80;
+#  listen 80 deferred http2;
 #  server_name www.example.com example.com;
 #  return 301 https://example.com$request_uri;
 #}
 
 # remove www for https requests
 #server {
-#  listen 443 ssl;
+#  listen 443 deferred http2 ssl;
 #  server_name www.example.com;
 #  ssl on;
 #  ssl_certificate /home/{{ cookiecutter.project_slug }}/.ssl/server.crt;
@@ -36,8 +36,8 @@ server {
 
 server {
   # for ssl
-  #listen 443 ssl;
-  listen 80;
+  #listen 443 deferred http2 ssl;
+  listen 80 deferred http2;
  
   server_name example.com;
 
@@ -72,8 +72,6 @@ server {
   #ssl on;
   #ssl_certificate /home/{{ cookiecutter.project_slug }}/.ssl/server.crt;
   #ssl_certificate_key /home/{{ cookiecutter.project_slug }}/.ssl/server.key;
-  
-  # to generate your dhparam.pem file, run in the terminal
-  # openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
-  #ssl_dhparam /etc/nginx/ssl/dhparam.pem;
+  #ssl_trusted_certificate /home/{{ cookiecutter.project_slug }}/.ssl/root_CA_cert_plus_intermediates;
+
 }

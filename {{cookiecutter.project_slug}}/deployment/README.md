@@ -32,6 +32,7 @@ gunicorn.conf.py - {{ cookiecutter.project_slug }}_project/gunicorn
 nginx.conf - etc/nginx
 default - /etc/nginx/sites-available/
 project.conf - /etc/supervisor/conf.d/
+ffdhe2048.dh - /etc/nginx/
 
 # For permissions (use wisely)
 # Is this really meaningfull???
