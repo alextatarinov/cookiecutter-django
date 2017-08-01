@@ -3,36 +3,31 @@ upstream app_server {
   server unix:/tmp/gunicorn.sock fail_timeout=0;
 }
 
-# if no Host match, close the connection to prevent host spoofing
+# if no Host match, close the connection
 server {
-  listen 80 deferred http2 default_server;
-  server_name _;
+  listen 80 default_server;
   return 444;
 }
 
-# remove www for http requests
+# remove www for http requests (and redirect to https)
 server {
-  listen 80 deferred http2;
+  listen 80;
   server_name www.example.com;
-  return 301 http://example.com$request_uri;
-}
 
-# redirect all requests to SSL and remove www
-#server {
-#  listen 80 deferred http2;
-#  server_name www.example.com example.com;
-#  return 301 https://example.com$request_uri;
-#}
+  return 301 http://example.com$request_uri;
+  # if you use HTTPS
+  #return 301 https://example.com$request_uri;
+}
 
 # remove www for https requests
 #server {
-#  listen 443 deferred http2 ssl;
+#  listen 443 ssl;
 #  server_name www.example.com;
-#  ssl on;
 #  ssl_certificate /home/{{ cookiecutter.project_slug }}/.ssl/server.crt;
 #  ssl_certificate_key /home/{{ cookiecutter.project_slug }}/.ssl/server.key;
 #  return 301 https://example.com$request_uri;
 #}
+
 
 server {
   # for ssl
@@ -69,7 +64,6 @@ server {
   #}
 
   # SSL
-  #ssl on;
   #ssl_certificate /home/{{ cookiecutter.project_slug }}/.ssl/server.crt;
   #ssl_certificate_key /home/{{ cookiecutter.project_slug }}/.ssl/server.key;
   #ssl_trusted_certificate /home/{{ cookiecutter.project_slug }}/.ssl/root_CA_cert_plus_intermediates;
