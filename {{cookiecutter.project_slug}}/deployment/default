@@ -9,14 +9,18 @@ server {
   return 444;
 }
 
-# remove www for http requests (and redirect to https)
+# remove www for http requests
 server {
   listen 80;
   server_name www.example.com;
-
   return 301 http://example.com$request_uri;
-  # if you use HTTPS
-  #return 301 https://example.com$request_uri;
+}
+
+# redirect http to https
+server {
+  listen 80;
+  server_name example.com;
+  return 301 https://example.com$request_uri;
 }
 
 # remove www for https requests
