@@ -11,8 +11,8 @@ GRANT ALL PRIVILEGES ON DATABASE {{ cookiecutter.project_slug }} TO {{ cookiecut
 
 cd /home/{{ cookiecutter.project_slug }}
 
-git clone https://bitbucket.org/tatarinov97/{{ cookiecutter.project_slug }}_project/
-cd {{ cookiecutter.project_slug }}_project
+git clone https://bitbucket.org/tatarinov97/{{ cookiecutter.project_slug }}/
+cd {{ cookiecutter.project_slug }}
 
 mkdir nginx
 mkdir gunicorn
@@ -28,21 +28,14 @@ mkdir static
 mkdir media
 
 # Copy
-gunicorn.conf.py - {{ cookiecutter.project_slug }}_project/gunicorn
+gunicorn.conf.py - {{ cookiecutter.project_slug }}/gunicorn
 nginx.conf - etc/nginx
 default - /etc/nginx/sites-available/
 project.conf - /etc/supervisor/conf.d/
 ffdhe2048.dh - /etc/nginx/
 
-# For permissions (use wisely)
-# Is this really meaningfull???
-#
-# addgroup {{ cookiecutter.project_slug }}-group
-# usermod -a -G {{ cookiecutter.project_slug }}-group {{ cookiecutter.project_slug }}
+# For permissions
 # static, media folder - 755, owned by project user
-# source folders - 750, source files 640, owned by root:{{ cookiecutter.project_slug }}-group
-# gunicorn folder - project user, 700 or 755
-# nginx folder - www-data, 700 or 755
-
-sudo find . -type d -exec sudo chmod 750 {} \;
-sudo find . -type f -exec sudo chmod 640 {} \;
+# inside static and media folders run:
+sudo find . -type d -exec sudo chmod 755 {} \;
+sudo find . -type f -exec sudo chmod 644 {} \;
