@@ -12,24 +12,24 @@ server {
 # remove www for http requests
 server {
   listen 80;
-  server_name www.example.com;
-  return 301 http://example.com$request_uri;
+  server_name www.{{ cookiecutter.domain_name }};
+  return 301 http://{{ cookiecutter.domain_name }}$request_uri;
 }
 
 # redirect http to https
 server {
   listen 80;
-  server_name example.com;
-  return 301 https://example.com$request_uri;
+  server_name {{ cookiecutter.domain_name }};
+  return 301 https://{{ cookiecutter.domain_name }}$request_uri;
 }
 
 # remove www for https requests
 #server {
 #  listen 443 ssl;
-#  server_name www.example.com;
+#  server_name www.{{ cookiecutter.domain_name }};
 #  ssl_certificate /home/{{ cookiecutter.project_slug }}/.ssl/server.crt;
 #  ssl_certificate_key /home/{{ cookiecutter.project_slug }}/.ssl/server.key;
-#  return 301 https://example.com$request_uri;
+#  return 301 https://{{ cookiecutter.domain_name }}$request_uri;
 #}
 
 
@@ -38,7 +38,7 @@ server {
   #listen 443 http2 ssl;
   listen 80 http2;
  
-  server_name example.com;
+  server_name {{ cookiecutter.domain_name }};
 
   access_log /home/{{ cookiecutter.project_slug }}/nginx/access.log;
   error_log /home/{{ cookiecutter.project_slug }}/nginx/error.log;
