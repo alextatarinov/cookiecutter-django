@@ -23,7 +23,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = '{{ cookiecutter.project_slug }}'.capitalize() + ' <' +  EMAIL_HOST_USER + '>'
+DEFAULT_FROM_EMAIL = '{{ cookiecutter.project_slug }}'.capitalize() + ' <' + EMAIL_HOST_USER + '>'
 
 # SECURITY
 {% if cookiecutter.use_ssl == 'y' %}
@@ -31,7 +31,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_HSTS_PRELOAD = True
-# set this to 60 seconds and then to 518400 when you can prove it works
+# set this to 60 seconds and then to 31536000 when you can prove it works
 SECURE_HSTS_SECONDS = 60
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 {% else %}
