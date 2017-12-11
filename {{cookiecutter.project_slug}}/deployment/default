@@ -35,8 +35,8 @@ server {
 
 server {
   # for ssl
-  #listen 443 deferred http2 ssl;
-  listen 80 deferred http2;
+  #listen 443 http2 ssl;
+  listen 80 http2;
  
   server_name example.com;
 
