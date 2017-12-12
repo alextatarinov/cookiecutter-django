@@ -47,11 +47,10 @@ MIDDLEWARE = [
 
 # GENERAL CONFIGURATION
 TIME_ZONE = '{{ cookiecutter.timezone }}'
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = '{{ cookiecutter.language_code }}'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-SITE_ID = 1
 
 # TEMPLATE CONFIGURATION
 TEMPLATES = [
