@@ -46,7 +46,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 {% if cookiecutter.use_s3 == 'y' %}
 # STORAGE CONFIGURATION
-from storages.backends.s3boto import S3BotoStorage
+from storages.backends.s3boto3 import S3Boto3Storage
 INSTALLED_APPS += ['storages', 'django_s3_collectstatic']
 
 AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_BUCKET')
@@ -56,15 +56,15 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
 STATICFILES_LOCATION = 'static'
-StaticRootS3BotoStorage = lambda: S3BotoStorage(location=STATICFILES_LOCATION)
+StaticRootS3Storage = lambda: S3Boto3Storage(location=STATICFILES_LOCATION)
 STATIC_URL = 'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
-STATICFILES_STORAGE = '{{ cookiecutter.project_slug }}.settings.production.StaticRootS3BotoStorage'
+STATICFILES_STORAGE = '{{ cookiecutter.project_slug }}.settings.production.StaticRootS3Storage'
 
 MEDIAFILES_LOCATION = 'media'
-MediaRootS3BotoStorage = lambda: S3BotoStorage(location=MEDIAFILES_LOCATION)
+MediaRootS3Storage = lambda: S3Boto3Storage(location=MEDIAFILES_LOCATION)
 MEDIA_URL = 'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
-DEFAULT_FILE_STORAGE = '{{ cookiecutter.project_slug }}.settings.production.MediaRootS3BotoStorage'
+DEFAULT_FILE_STORAGE = '{{ cookiecutter.project_slug }}.settings.production.MediaRootS3Storage'
 AWS_PRELOAD_METADATA = True
 
 # AWS cache settings, don't change unless you know what you're doing:
