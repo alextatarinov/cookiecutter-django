@@ -5,8 +5,7 @@
   "domain_name": "example.com",
   "timezone": "UTC",
   "language_code": "en-us",
-  "use_celery": "n",
-  "use_s3": "n",
-  "use_sentry_for_error_reporting": "n",
-  "use_ssl": "y"
+  "use_celery": "y",
+  "use_drf": "n",
+  "use_sentry": "n"
 }

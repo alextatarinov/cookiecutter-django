@@ -1,87 +1,45 @@
 from .base import *
 
 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '{{ cookiecutter.domain_name }}').split(',')
-
-# DATABASE CONFIGURATION
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
-        'PORT': os.environ.get('DB_PORT', ''),
-        'CONN_MAX_AGE': 600
-    }
-}
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', '{{ cookiecutter.domain_name }}').split(',')
 
 # EMAIL CONFIGURATION
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = '{{ cookiecutter.project_slug }}'.capitalize() + ' <' + EMAIL_HOST_USER + '>'
+DEFAULT_FROM_EMAIL = '{{ cookiecutter.project_slug }}' + ' <' + EMAIL_HOST_USER + '>'
 
 # SECURITY
-{% if cookiecutter.use_ssl == 'y' %}
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_HSTS_PRELOAD = True
-# set this to 60 seconds and then to 31536000 when you can prove it works
-SECURE_HSTS_SECONDS = 60
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-{% else %}
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_HSTS_PRELOAD = True
-# # set this to 60 seconds and then to 518400 when you can prove it works
-# SECURE_HSTS_SECONDS = 60
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-{% endif %}
 
-{% if cookiecutter.use_s3 == 'y' %}
 # STORAGE CONFIGURATION
-from storages.backends.s3boto3 import S3Boto3Storage
-INSTALLED_APPS += ['storages', 'django_s3_collectstatic']
-
-AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_BUCKET')
-AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-
-STATICFILES_LOCATION = 'static'
-StaticRootS3Storage = lambda: S3Boto3Storage(location=STATICFILES_LOCATION)
-STATIC_URL = 'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
-STATICFILES_STORAGE = '{{ cookiecutter.project_slug }}.settings.production.StaticRootS3Storage'
-
-MEDIAFILES_LOCATION = 'media'
-MediaRootS3Storage = lambda: S3Boto3Storage(location=MEDIAFILES_LOCATION)
-MEDIA_URL = 'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
-
-DEFAULT_FILE_STORAGE = '{{ cookiecutter.project_slug }}.settings.production.MediaRootS3Storage'
-AWS_PRELOAD_METADATA = True
-
-# AWS cache settings, don't change unless you know what you're doing:
-AWS_EXPIRY = 60 * 60 * 24 * 7
-
-# TODO See: https://github.com/jschneier/django-storages/issues/47
-# Revert the following and use str after the above-mentioned bug is fixed in
-# either django-storage-redux or boto
-control = 'max-age={:d}, s-maxage={:d}, must-revalidate'.format(AWS_EXPIRY, AWS_EXPIRY)
-AWS_HEADERS = {
-    'Cache-Control': bytes(control, encoding='latin-1')
-}
-
+# INSTALLED_APPS += ['storages',]
+#
+# AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = env('AWS_BUCKET')
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+#
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_PRELOAD_METADATA = True
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_LOCATION = 'media'
+# MEDIA_URL = 'https://{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+#
+# # AWS Caching - be careful
+# AWS_EXPIRY = 60 * 60 * 24 * 7 # 1 week
+# AWS_S3_OBJECT_PARAMETERS = {
+#     'Cache-Control': 'max-age={:d}, s-maxage={:d}, must-revalidate'.format(AWS_EXPIRY, AWS_EXPIRY)
+# }
 # Use this if you have problems with Frankfurt S3 region
 # os.environ['S3_USE_SIGV4'] = 'True'
 # AWS_S3_HOST = 's3.eu-central-1.amazonaws.com'
-{% endif %}
+
 
 # CACHING
 CACHES = {
@@ -99,10 +57,11 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 #LOGGING
+LOG_DIR = DJANGO_ROOT.path('logs')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-{% if cookiecutter.use_sentry_for_error_reporting == 'y' %}
+{% if cookiecutter.use_sentry == 'y' %}
     'root': {
         'level': 'ERROR',
         'handlers': ['sentry'],
@@ -123,7 +82,7 @@ LOGGING = {
         }
     },
     'handlers': {
-{% if cookiecutter.use_sentry_for_error_reporting == 'y' %}
+{% if cookiecutter.use_sentry == 'y' %}
         'sentry': {
             'level': 'ERROR',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler'
@@ -135,7 +94,7 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 5,  # 5 MB
             'backupCount': 3,
             'formatter': 'server',
-            'filename': os.path.join(LOG_DIR, 'errors.log')
+            'filename': LOG_DIR('errors.log')
         },
         'access': {
             'level': 'INFO',
@@ -144,7 +103,7 @@ LOGGING = {
             'interval': 1,
             'backupCount': 2,
             'formatter': 'server',
-            'filename': os.path.join(LOG_DIR, 'access.log')
+            'filename': LOG_DIR('access.log')
         },
 {% if cookiecutter.use_celery == 'y' %}
         'celery_log': {
@@ -154,7 +113,7 @@ LOGGING = {
             'interval': 1,
             'backupCount': 2,
             'formatter': 'default',
-            'filename': os.path.join(LOG_DIR, 'celery.log')
+            'filename': LOG_DIR('celery.log')
         },
 {% endif %}
         'app': {
@@ -164,7 +123,7 @@ LOGGING = {
             'interval': 3,
             'backupCount': 2,
             'formatter': 'application',
-            'filename': os.path.join(LOG_DIR, 'app.log')
+            'filename': LOG_DIR('app.log')
         },
     },
     'loggers': {
@@ -172,7 +131,7 @@ LOGGING = {
             'handlers': ['app'],
             'level': 'DEBUG',
         },
-{% if cookiecutter.use_sentry_for_error_reporting == 'y' %}
+{% if cookiecutter.use_sentry == 'y' %}
         'celery_tasks': {
             'handlers': ['celery_log'],
             'level': 'DEBUG',
@@ -194,10 +153,10 @@ LOGGING = {
     }
 }
 
-{% if cookiecutter.use_sentry_for_error_reporting == 'y' %}
+{% if cookiecutter.use_sentry == 'y' %}
 INSTALLED_APPS += ['raven.contrib.django.raven_compat', ]
 RAVEN_CONFIG = {
-    'dsn': os.environ.get('DJANGO_SENTRY_DSN'),
+    'dsn': env('SENTRY_DSN'),
     'release': raven.fetch_git_sha(PROJECT_ROOT),
 }
 {% endif %}

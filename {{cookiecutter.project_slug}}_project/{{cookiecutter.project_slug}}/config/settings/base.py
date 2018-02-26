@@ -1,28 +1,33 @@
-import os
+import environ
 
+DJANGO_ROOT = environ.Path(__file__) - 3
 
-DJANGO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROJECT_ROOT = os.path.dirname(DJANGO_ROOT)
-FILE_UPLOAD_PERMISSIONS = 0o644
+env = environ.Env()
+environ.Env.read_env(DJANGO_ROOT('.env'))
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-DEBUG = False
+DJANGO_ROOT = environ.Path(__file__) - 3
+PROJECT_ROOT = DJANGO_ROOT - 1
+
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
 
 # APP CONFIGURATION
 DJANGO_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
+    'django.contrib.humanize'
 ]
 
 THIRD_PARTY_APPS = [
-    'allauth',  # registration
-    'allauth.account',  # registration
-    'allauth.socialaccount',  # registration
+    {% if cookiecutter.use_drf == 'y' %}
+    'rest_framework',
+    'rest_framework_swagger',
+    {% endif %}
+    'django_extensions',
 ]
 
 # Apps specific for this project go here.
@@ -34,8 +39,6 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # MIDDLEWARE CONFIGURATION
 MIDDLEWARE = [
-    'django.middleware.gzip.GZipMiddleware',
-    'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,11 +55,29 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# DATABASES
+DATABASES = {
+    'default': env.db()
+}
+DATABASES['default']['CONN_MAX_AGE'] = 600
+
+# DJANGO DEBUG TOOLBAR
+if DEBUG:
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', ]
+    INSTALLED_APPS += ['debug_toolbar',]
+    INTERNAL_IPS = ['127.0.0.1']
+    DEBUG_TOOLBAR_CONFIG = {
+        'DISABLE_PANELS': [
+            'debug_toolbar.panels.redirects.RedirectsPanel',
+        ],
+        'SHOW_TEMPLATE_CONTEXT': True,
+    }
+
 # TEMPLATE CONFIGURATION
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(DJANGO_ROOT, 'templates'), ],
+        'DIRS': [DJANGO_ROOT('templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'debug': DEBUG,
@@ -72,25 +93,23 @@ TEMPLATES = [
     }
 ]
 
-# See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
 # STATIC FILE CONFIGURATION
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATIC_ROOT = PROJECT_ROOT('staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(DJANGO_ROOT, 'static'),
+    DJANGO_ROOT('static')
 ]
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # MEDIA CONFIGURATION
-MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'MEDIA')
+MEDIA_ROOT = PROJECT_ROOT('media')
 MEDIA_URL = '/media/'
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 # URL Configuration
-ROOT_URLCONF = '{{ cookiecutter.project_slug }}.urls'
+ROOT_URLCONF = 'config.urls'
 
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
-WSGI_APPLICATION = '{{ cookiecutter.project_slug }}.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # PASSWORD STORAGE SETTINGS
 # See https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
@@ -122,19 +141,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # AUTHENTICATION CONFIGURATION
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
-# Some really nice defaults
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 # Custom user app defaults
 AUTH_USER_MODEL = 'users.User'
 
-# Location of root django.contrib.admin URL, use {% raw %}{% url 'admin:index' %}{% endraw %}
-ADMIN_URL = r'^admin/'
+# Location of root django.contrib.admin URL
+ADMIN_URL = 'admin'
 
 # SECURITY
 SECURE_CONTENT_TYPE_NOSNIFF = True

@@ -6,7 +6,7 @@ env.key_filename = '~/.ssh/aws-{{ cookiecutter.project_slug }}.pem'
 env.user = 'ubuntu'
 env.hosts = ['{{ cookiecutter.domain_name }}']
 
-project_dir = '/home/{{ cookiecutter.project_slug }}/{{ cookiecutter.project_slug }}'
+project_dir = '/home/ubuntu/{{ cookiecutter.project_slug }}_project'
 app_dir = os.path.join(project_dir, '{{ cookiecutter.project_slug }}')
 env_dir = os.path.join(project_dir, '.venv')
 
@@ -18,10 +18,6 @@ def deploy():
             run('pip install -r requirements.txt')
         with cd(app_dir):
             run('python manage.py migrate')
-            {% if cookiecutter.use_s3 == 'y' %}
-            run('python manage.py fasts3collectstatic --no-input')
-            {% else %}
             run('python manage.py collectstatic --no-input')
-            {% endif %}
 
     sudo('supervisorctl reload {}'.format('{{ cookiecutter.project_slug }}'))

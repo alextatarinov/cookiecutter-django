@@ -1,0 +1,25 @@
+django
+django-environ
+django-extensions
+django-model-utils
+model-mommy
+Pillow
+argon2-cffi
+psycopg2
+django-redis
+redis
+{% if cookiecutter.use_celery == "y" %}
+celery
+{% endif %}
+django-debug-toolbar
+gunicorn
+boto3
+django-storages
+{% if cookiecutter.use_sentry == "y" %}
+raven
+{% endif %}
+{% if cookiecutter.use_drf == "y" %}
+djangorestframework
+django-rest-swagger
+rest-condition
+{% endif %}

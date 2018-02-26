@@ -1,0 +1,84 @@
+# gunicorn django app
+upstream app_server {
+  server unix:/tmp/gunicorn.sock fail_timeout=0;
+}
+
+# if no Host match, close the connection
+server {
+  listen 443 http2 ssl default_server;
+  listen 80 default_server;
+
+  ssl_certificate /etc/nginx/nginx.crt;
+  ssl_certificate_key /etc/nginx/nginx.key;
+  return 444;
+}
+
+# remove www for http requests
+server {
+  listen 80;
+  server_name www.{{ cookiecutter.domain_name }};
+  return 301 http://{{ cookiecutter.domain_name }}$request_uri;
+}
+# remove www for https requests
+server {
+  listen 443 http2 ssl;
+  server_name www.{{ cookiecutter.domain_name }};
+
+  ssl_certificate /etc/letsencrypt/live/{{ cookiecutter.domain_name }}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ cookiecutter.domain_name }}/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt/live/{{ cookiecutter.domain_name }}/fullchain.pem;
+  return 301 https://{{ cookiecutter.domain_name }}$request_uri;
+}
+
+# redirect http to https
+server {
+  listen 80;
+  server_name {{ cookiecutter.domain_name }};
+  return 301 https://{{ cookiecutter.domain_name }}$request_uri;
+}
+
+
+server {
+  # for ssl
+  #listen 443 http2 ssl;
+  listen 80 http2;
+ 
+  server_name {{ cookiecutter.domain_name }};
+
+  access_log /home/ubuntu/{{ cookiecutter.project_slug }}_project/nginx/access.log;
+  error_log /home/ubuntu/{{ cookiecutter.project_slug }}_project/nginx/error.log;
+
+
+  # CAREFULLY!
+  ####add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+  location / {
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Url-Scheme $scheme;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+      proxy_pass http://app_server;
+  }
+
+  ##
+  # Media/static folders
+  ##
+  location /static {
+        alias /home/ubuntu/{{ cookiecutter.project_slug }}_project/static/;
+        add_header "Access-Control-Allow-Origin" "$http_origin";
+        add_header "Access-Control-Allow-Credentials" "true";
+        add_header "Cache-Control" "public, max-age=31536000, s-maxage=31536000, must-revalidate, proxy-revalidate"
+
+  }
+  location /media {
+        alias /home/ubuntu/{{ cookiecutter.project_slug }}_project/media/;
+        add_header "Access-Control-Allow-Origin" "$http_origin";
+        add_header "Access-Control-Allow-Credentials" "true";
+  }
+
+  # SSL
+  ssl_certificate /etc/letsencrypt/live/{{ cookiecutter.domain_name }}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/{{ cookiecutter.domain_name }}/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt/live/{{ cookiecutter.domain_name }}/fullchain.pem;
+}

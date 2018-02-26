@@ -5,7 +5,7 @@ from django.conf import settings
 
 
 app = Celery('{{ cookiecutter.project_slug }}', broker='amqp://guest@localhost//')
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', '{{ cookiecutter.project_slug }}.settings.production')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
 
 app.config_from_object('django.conf:settings')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
