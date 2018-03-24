@@ -13,7 +13,7 @@ mkdir {{ cookiecutter.project_slug }}_project
 cd {{ cookiecutter.project_slug }}_project
 # Git url here
 git clone
-mkdir nginx gunicorn
+mkdir nginx gunicorn celery
 # Folders for local files storage
 mkdir static media
 
@@ -35,10 +35,10 @@ ffdhe2048.dh - /etc/nginx/
 # Generate self-signed SSL certificate with common name * for default_server
 sudo openssl req -x509 -nodes -days 9999 -newkey rsa:2048 -keyout /etc/nginx/nginx.key -out /etc/nginx/nginx.crt
 
-# Set permissions for read-write folders
+# Set permissions for folders which require write access
 cd ..
-sudo chown www-data static media logs nginx
-sudo chmod 755 static media logs nginx
+sudo usermod -a -G ubuntu www-data
+sudo chmod 775 logs nginx gunicorn celery
 
 # Create SSL certificates
 sudo add-apt-repository ppa:certbot/certbot && sudo apt-get update && sudo apt-get install certbot 
