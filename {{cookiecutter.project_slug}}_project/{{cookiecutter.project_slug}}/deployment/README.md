@@ -40,7 +40,6 @@ sudo chown www-data static media
 sudo chmod 755 static media
 
 # Enable nginx config
-sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 sudo service nginx restart
 
 # Enable supervisor config
