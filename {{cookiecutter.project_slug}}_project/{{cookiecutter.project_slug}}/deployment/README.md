@@ -40,6 +40,14 @@ cd ..
 sudo chown www-data static media
 sudo chmod 755 static media
 
+# Create SSL certificates
+sudo add-apt-repository ppa:certbot/certbot && sudo apt-get update && sudo apt-get install certbot 
+sudo certbot certonly --standalone --pre-hook "service nginx stop" --post-hook "service nginx start" --rsa-key-size=4096 --must-staple
+# Add renew script to crontab 
+crontab -e
+certbot renew --pre-hook "service nginx stop" --post-hook "service nginx start" --rsa-key-size=4096 --must-staple
+
+
 # Enable nginx config
 sudo service nginx restart
 
