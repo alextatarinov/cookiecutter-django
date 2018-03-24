@@ -35,10 +35,10 @@ ffdhe2048.dh - /etc/nginx/
 # Generate self-signed SSL certificate with common name * for default_server
 sudo openssl req -x509 -nodes -days 9999 -newkey rsa:2048 -keyout /etc/nginx/nginx.key -out /etc/nginx/nginx.crt
 
-# Set permissions for static and media
+# Set permissions for read-write folders
 cd ..
-sudo chown www-data static media
-sudo chmod 755 static media
+sudo chown www-data static media logs nginx
+sudo chmod 755 static media logs nginx
 
 # Create SSL certificates
 sudo add-apt-repository ppa:certbot/certbot && sudo apt-get update && sudo apt-get install certbot 
