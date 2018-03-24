@@ -47,7 +47,6 @@ sudo certbot certonly --standalone --pre-hook "service nginx stop" --post-hook "
 crontab -e
 certbot renew --pre-hook "service nginx stop" --post-hook "service nginx start" --rsa-key-size=4096 --must-staple
 
-
 # Enable nginx config
 sudo service nginx restart
 
