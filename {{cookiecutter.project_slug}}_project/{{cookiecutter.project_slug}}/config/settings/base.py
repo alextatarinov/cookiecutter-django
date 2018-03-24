@@ -22,10 +22,8 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    {% if cookiecutter.use_drf == 'y' %}
-    'rest_framework',
-    'rest_framework_swagger',
-    {% endif %}
+    {% if cookiecutter.use_drf == 'y' %}'rest_framework',
+    'rest_framework_swagger',{% endif %}
     'django_extensions',
 ]
 
