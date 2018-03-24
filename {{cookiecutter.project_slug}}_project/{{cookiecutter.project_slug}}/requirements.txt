@@ -8,13 +8,12 @@ argon2-cffi
 psycopg2
 django-redis
 redis
+pipdeptree
 {% if cookiecutter.use_celery == "y" %}
 celery
 {% endif %}
 django-debug-toolbar
 gunicorn
-boto3
-django-storages
 {% if cookiecutter.use_sentry == "y" %}
 raven
 {% endif %}

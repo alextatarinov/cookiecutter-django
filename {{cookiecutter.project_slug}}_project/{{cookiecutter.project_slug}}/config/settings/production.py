@@ -18,6 +18,7 @@ CSRF_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # STORAGE CONFIGURATION
+# pip install boto3 django-storages
 # INSTALLED_APPS += ['storages',]
 #
 # AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')

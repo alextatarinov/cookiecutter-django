@@ -1,5 +1,5 @@
 # Packages
-sudo apt-get install nginx python3-pip postgresql postgresql-client libpq-dev supervisor nano git redis-server
+sudo apt-get update && sudo apt-get install nginx python3-pip postgresql postgresql-client libpq-dev supervisor nano git redis-server
 
 # DB
 sudo -su postgres psql
@@ -20,6 +20,7 @@ mkdir static media
 # Virtualenv
 pip3.6 install virtualenv
 virtualenv --no-site-packages --python=python3.6 venv
+pip install --upgrade pip
 pip install -r req*
 source venv/bin/activete
 
