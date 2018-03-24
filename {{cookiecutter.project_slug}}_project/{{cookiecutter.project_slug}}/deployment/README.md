@@ -20,9 +20,10 @@ mkdir static media
 # Virtualenv
 pip3.6 install virtualenv
 virtualenv --no-site-packages --python=python3.6 venv
+source venv/bin/activate
+cd {{ cookiecutter.project_slug }}
 pip install --upgrade pip
 pip install -r req*
-source venv/bin/activete
 
 # Configs - move to folders
 gunicorn.conf.py - /home/ubuntu/{{ cookiecutter.project_slug }}/gunicorn
