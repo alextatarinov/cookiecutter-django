@@ -26,7 +26,7 @@ pip install --upgrade pip
 pip install -r req*
 
 # Configs - move to folders
-gunicorn.conf.py - /home/ubuntu/{{ cookiecutter.project_slug }}/gunicorn
+gunicorn.conf.py - /home/ubuntu/{{ cookiecutter.project_slug }}_project/gunicorn
 nginx.conf - /etc/nginx
 default - /etc/nginx/sites-available/
 {{ cookiecutter.project_slug}}.conf, celery.conf - /etc/supervisor/conf.d/
