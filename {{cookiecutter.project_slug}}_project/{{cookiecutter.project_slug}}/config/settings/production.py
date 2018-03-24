@@ -57,7 +57,7 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 #LOGGING
-LOG_DIR = DJANGO_ROOT.path('logs')
+LOG_DIR = PROJECT_ROOT.path('logs')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
