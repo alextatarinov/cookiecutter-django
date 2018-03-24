@@ -27,7 +27,7 @@ source venv/bin/activete
 gunicorn.conf.py - /home/ubuntu/{{ cookiecutter.project_slug }}/gunicorn
 nginx.conf - /etc/nginx
 default - /etc/nginx/sites-available/
-{{ cookiecutter.project_slug} }.conf, celery.conf - /etc/supervisor/conf.d/
+{{ cookiecutter.project_slug}}.conf, celery.conf - /etc/supervisor/conf.d/
 ffdhe2048.dh - /etc/nginx/
 
 # Generate self-signed SSL certificate with common name * for default_server

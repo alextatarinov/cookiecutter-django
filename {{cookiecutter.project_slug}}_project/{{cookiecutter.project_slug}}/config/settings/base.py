@@ -1,12 +1,11 @@
 import environ
 
 DJANGO_ROOT = environ.Path(__file__) - 3
+PROJECT_ROOT = DJANGO_ROOT - 1
 
 env = environ.Env()
 environ.Env.read_env(DJANGO_ROOT('.env'))
 
-DJANGO_ROOT = environ.Path(__file__) - 3
-PROJECT_ROOT = DJANGO_ROOT - 1
 
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', default=False)
