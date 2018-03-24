@@ -1,7 +1,7 @@
 from .base import *
 
 
-ALLOWED_HOSTS = env('ALLOWED_HOSTS', '{{ cookiecutter.domain_name }}').split(',')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS', default='{{ cookiecutter.domain_name }}').split(',')
 
 # EMAIL CONFIGURATION
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
