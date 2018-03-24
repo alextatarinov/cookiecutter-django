@@ -6,6 +6,6 @@ pidfile = '/home/ubuntu/{{ cookiecutter.project_slug }}_project/gunicorn/gunicor
 user = 'www-data'
 
 accesslog = '/home/ubuntu/{{ cookiecutter.project_slug }}_project/gunicorn/.fake_gunicorn_log'
-access_log_format = '"%%(m)s %%(U)s %%(q)s %%(H)s" %%(s)s %%(b)s'
+access_log_format = '"%(m)s %(U)s %(q)s %(H)s" %(s)s %(b)s'
 errorlog = '/home/ubuntu/{{ cookiecutter.project_slug }}_project/gunicorn/.fake_gunicorn_log'
 capture_output = True
