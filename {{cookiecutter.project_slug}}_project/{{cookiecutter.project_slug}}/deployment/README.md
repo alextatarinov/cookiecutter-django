@@ -12,7 +12,7 @@ GRANT ALL PRIVILEGES ON DATABASE {{ cookiecutter.project_slug }} TO {{ cookiecut
 mkdir {{ cookiecutter.project_slug }}_project
 # Git url here
 git clone
-cd {{ cookiecutter.project_slug }}
+cd {{ cookiecutter.project_slug }}_project
 mkdir nginx gunicorn
 # Folders for local files storage
 mkdir static media
