@@ -36,6 +36,7 @@ ffdhe2048.dh - /etc/nginx/
 sudo openssl req -x509 -nodes -days 9999 -newkey rsa:2048 -keyout /etc/nginx/nginx.key -out /etc/nginx/nginx.crt
 
 # Set permissions for static and media
+cd ..
 sudo chown www-data static media
 sudo chmod 755 static media
 
