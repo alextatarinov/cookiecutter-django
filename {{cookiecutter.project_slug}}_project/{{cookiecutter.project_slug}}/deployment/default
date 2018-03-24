@@ -68,7 +68,7 @@ server {
         alias /home/ubuntu/{{ cookiecutter.project_slug }}_project/static/;
         add_header "Access-Control-Allow-Origin" "$http_origin";
         add_header "Access-Control-Allow-Credentials" "true";
-        add_header "Cache-Control" "public, max-age=31536000, s-maxage=31536000, must-revalidate, proxy-revalidate"
+        add_header "Cache-Control" "public, max-age=31536000, s-maxage=31536000, must-revalidate, proxy-revalidate";
 
   }
   location /media {
