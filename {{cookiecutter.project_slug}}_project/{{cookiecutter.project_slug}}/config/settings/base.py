@@ -144,7 +144,7 @@ AUTHENTICATION_BACKENDS = [
 AUTH_USER_MODEL = 'users.User'
 
 # Location of root django.contrib.admin URL
-ADMIN_URL = 'admin'
+ADMIN_URL = 'admin/'
 
 # SECURITY
 SECURE_CONTENT_TYPE_NOSNIFF = True
