@@ -30,7 +30,6 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'drf_yasg',
-    'django_extensions',
     'django_handy',
     'corsheaders',
     'django_filters',
@@ -39,12 +38,12 @@ THIRD_PARTY_APPS = [
 # Apps specific for this project go here.
 LOCAL_APPS = [
     'shared',
-    'user',
+    'users',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-TEST_RUNNER = 'shared.tests.FixedDiscoverRunner'
+TEST_RUNNER = 'django_handy.tests.FixedDiscoverRunner'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
