@@ -19,8 +19,6 @@ Use config.settings.local for local development. Note that this file is included
 #### After server clone
 - setup dns
 - add Jenkinsfile configs
-- delete certificates from origin server  
-`sudo certbot delete -d`       
 - obtain new certificate  
 - edit .env file 
 - restart build

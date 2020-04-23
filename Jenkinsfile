@@ -1,16 +1,14 @@
 node {
     def branches = [
         'develop': [
-            'host': '18.195.235.246',
+            'host': '1.1.1.1',
             'url': 'https://clevergames-develop.enkonix.com',
-            'pem': '/var/lib/jenkins/clevergames.pem',
-            'ansible_inventory': 'develop'
+            'pem': '',
         ],
         'master': [
-            'host': '3.121.29.160',
+            'host': '1.1.1.1',
             'url': 'https://4challenge-games.nl',
-            'pem': '/var/lib/jenkins/clevergames.pem',
-            'ansible_inventory': 'production'
+            'pem': '',
         ],
     ]
 
@@ -18,22 +16,7 @@ node {
     def host = branch['host']
     def url = branch['url']
     def pem = branch['pem']
-    def ansible_inventory = branch['ansible_inventory']
 
-    stage('Ansible') {
-        sh 'sudo -H pip3 install ansible --quiet'
-        checkout scm
-        dir('deploy/ansible') {
-            sh """
-                ansible-playbook web.yml \
-                    -i envs/${ansible_inventory} -v \
-                    --extra-vars '''{
-                        "git_branch":"${env.BRANCH_NAME}",
-                        "ansible_ssh_private_key_file": "${pem}"
-                    }'''
-            """
-        }
-    }
     stage('Build') {
         result = sh (script: """
             ssh -T -i ${pem} ubuntu@${host} << EOF
@@ -63,9 +46,6 @@ node {
 
             python manage.py drop_test_database --noinput
             python manage.py test --settings=config.settings.local --failfast || exit 1
-
-            # Backup database
-            python manage.py db_dump || exit 1
 
             python manage.py migrate || exit 1
             python manage.py collectstatic --noinput || exit 1
