@@ -1,1 +1,16 @@
+.env/
+*.pyc
 .idea
+db.sqlite3
+*.pem
+.env
+.env_*
+/staticfiles
+/media
+/logs/*
+!/logs/.gitkeep
+*_local.py
+.vscode/
+celery-schedule.db
+celerybeat.pid
+*.egg-info
